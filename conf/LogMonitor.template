@@ -1,5 +1,5 @@
 id = {
-	name = "EventChannel",
+	name = "LogMonitor",
 	major_version = 1,
 	minor_version = 0,
 	patch_version = 0,
@@ -10,14 +10,14 @@ facets = {
 		interface_name = "IDL:scs/core/IComponent:1.0",
 	},
 	[2] = {
-		name           = "Sink",
-		interface_name = "IDL:scs/demos/helloworld/Hello:1.0",
+		name           = "MonitorConfiguration",
+		interface_name = "IDL:log_monitor/MonitorConfiguration:1.0",
 	},
 }
 receptacles = {
 	[1] = {
 		name           = "Source",
 		interface_name = "IDL:event_service/EventSink:1.0",
-		is_multiplex   = false,
+		is_multiplex   = true,
 	},
 }

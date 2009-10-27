@@ -1,0 +1,22 @@
+id = {
+	name = "EventService",
+	major_version = 1,
+	minor_version = 0,
+	patch_version = 0,
+}
+facets = {
+	[1] = {
+		name           = "IComponent",
+		interface_name = "IDL:scs/core/IComponent:1.0",
+	},
+	[2] = {
+		name           = "Factory",
+		interface_name = "IDL:event_service/ChannelFactory:1.0",
+	},
+	[2] = {
+		name           = "Collection",
+		interface_name = "IDL:event_service/ChannelCollection:1.0",
+	},
+}
+receptacles = {
+}

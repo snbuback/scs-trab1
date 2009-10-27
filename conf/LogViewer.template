@@ -1,0 +1,30 @@
+id = {
+	name = "LogMonitor",
+	major_version = 1,
+	minor_version = 0,
+	patch_version = 0,
+}
+facets = {
+	[1] = {
+		name           = "IComponent",
+		interface_name = "IDL:scs/core/IComponent:1.0",
+	},
+	[2] = {
+		name           = "MonitorConfiguration",
+		interface_name = "IDL:log_v/MonitorConfiguration:1.0",
+	},
+	[2] = {
+		name       = "EventReceiver",
+		interface_name = "IDL:log_viewer/EventSink:1.0",
+	},
+	[3] = {
+		name       = "ViewAdministration",
+		interface_name = "IDL:log_viewer/ViewAdministration",
+	},
+	[4] = {
+		name       = "Monitoring",
+		interface_name = "IDL:log_viewer/Monitoring",
+	},
+}
+receptacles = {
+}

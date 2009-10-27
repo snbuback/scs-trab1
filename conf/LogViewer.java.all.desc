@@ -1,0 +1,29 @@
+template_id = {
+	name = "LogViewer",
+	major_version = 1,
+	minor_version = 0,
+	patch_version = 0,
+}
+facets = {
+	[1] = {
+		name       = "IComponent",
+		class_name = "scs.core.servant.IComponentServant",
+	},
+	[2] = {
+		name       = "EventReceiver",
+		class_name = "log_viewer.servant.EventReceiverServant",
+	},
+	[3] = {
+		name       = "ViewAdministration",
+		class_name = "log_viewer.servant.ViewAdministrationServant",
+	},
+	[4] = {
+		name       = "Monitoring",
+		class_name = "log_viewer.servant.MonitoringServant",
+	},
+}
+receptacles = {
+}
+entry_point = "log_viewer.servant.LogViewerFactory"
+lang = "java"
+plat = "all"

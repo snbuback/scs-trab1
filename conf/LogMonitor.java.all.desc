@@ -1,0 +1,26 @@
+template_id = {
+	name = "LogMonitor",
+	major_version = 1,
+	minor_version = 0,
+	patch_version = 0,
+}
+facets = {
+	[1] = {
+		name       = "IComponent",
+		class_name = "scs.core.servant.IComponentServant",
+	},
+	[2] = {
+		name       = "MonitorConfiguration",
+		class_name = "log_monitor.servant.MonitorConfigurationServant",
+	},
+}
+receptacles = {
+	[1] = {
+		name       = "Source",
+                interface_name = "IDL:event_service/EventSink:1.0",
+		class_name = "ListReceptacle",
+	},
+}
+entry_point = "log_monitor.servant.LogMonitorFactory"
+lang = "java"
+plat = "all"
