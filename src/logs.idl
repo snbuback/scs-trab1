@@ -1,0 +1,42 @@
+#ifndef LOG_MONITOR_IDL
+#define LOG_MONITOR_IDL
+
+#include "events.idl"
+
+module util {
+	typedef sequence<string> StringSeq;
+};
+
+module log_monitor {
+   
+   interface MonitorConfiguration {
+	void addFile(in string file);
+	util::StringSeq getMonitoringFiles();
+	string getHost();
+   };
+   
+   struct FileModificationEvent {
+	string fileName;
+	string host;
+	string ip;
+	long date;
+   };
+
+   typedef sequence<log_monitor::FileModificationEvent> FileModificationEventSeq;
+
+};
+
+module log_viewer {
+
+	interface ViewAdministrationMonitoring {
+		util::StringSeq getMonitoringFiles();
+	};
+
+	interface Monitoring {
+		log_monitor::FileModificationEventSeq getModifications();
+		void clear();
+	};
+
+};
+
+#endif

@@ -1,0 +1,240 @@
+#ifndef SCS_IDL
+#define SCS_IDL
+
+/* 
+ * \brief Módulo do SCS.
+ *
+ * O SCS possui três interfaces obrigatórias para a construção do componente, 
+ * são elas: IComponent, IReceptacles e IMetaInterface.
+ */
+module scs {
+  module core {
+    /** \brief Indica que ocorreu um erro na ativação. */
+    exception StartupFailed {};
+    /** \brief Indica que ocorreu um erro na desativação. */
+    exception ShutdownFailed {};
+    /** \brief Indica que o nome é inválido. */
+    exception InvalidName {
+      string name; /**< \brief O nome que está inválido. */
+    };
+    /** \brief Indica que a conexão é inválida. */
+    exception InvalidConnection {};
+    /** \brief Indica que a conexão já foi estabelecida. */
+    exception AlreadyConnected {};
+    /** \brief Indica que foi ultrapassado o limite de conexões . */
+    exception ExceededConnectionLimit {};
+    /** \brief Indica que a conexão ainda não foi estabelecida. */
+    exception NoConnection {};
+
+    /** \brief Número identificador da conexão. */
+    typedef unsigned long ConnectionId;
+    /** \brief Lista de nomes. */
+    typedef sequence<string> NameList;
+
+    /** 
+     * \brief Descrição da faceta. 
+     * 
+     * Para descrever uma faceta, é necessário um nome identificador, a
+     * interface que a faceta implementa e uma referência para a faceta
+     * descrita.
+     */
+    struct FacetDescription {
+      string name; /**< \brief O nome identificador. */
+      string interface_name; /**< \brief O nome da interface que a faceta
+         implementa. */
+      Object facet_ref; /**< \brief A referência para a faceta descrita. */
+    };
+    typedef sequence<FacetDescription> FacetDescriptions; /**< \brief 
+    Conjunto de descritores de facetas. */
+
+    /** \brief Descição da conexão. */
+    struct ConnectionDescription {
+      ConnectionId id; /**< \brief Identificador da conexão. */
+      Object objref; /**< \brief Referência para uma conexão. */
+    };
+    typedef sequence<ConnectionDescription> ConnectionDescriptions; /**< \brief
+    Conjunto de descritores de conexões. */
+
+   /** 
+    * \brief Descrição de um receptáculo. 
+    * 
+    * O receptáculo é definido por um nome identificador, o nome da interface
+    * que se conecta ao receptáculo,  uma \i flag para indicar se o receptáculo
+    * é múltiplo e o conjunto de objetos que implementam a interface e estão
+    * conectados ao receptáculo. No SCS, o receptáculo não provê restrições
+    * no número de conexões entre facetas, ou seja, um receptáculo pode estar
+    * conectado a diversas facetas. Utilza-se a \i flag `is_multiplex`para 
+    * identificar se o receptáculo pode se conectar a vários receptáculos.
+    */
+   struct ReceptacleDescription {
+      string name; /**< \brief  O nome identificador. */
+      /**
+       * \brief O nome da interface que se conecta ao receptáculo.
+       *
+       * É utilizado o repositoryID para preencher esse campo.
+       */
+      string interface_name;         
+      boolean is_multiplex; /**< \brief Indica se o receptáculo suporta 
+          múltiplas facetas conectadas. */
+      ConnectionDescriptions connections; /**< \brief As descrições das 
+          conexões que foram estabelecidas. */
+    };
+    typedef sequence<ReceptacleDescription> ReceptacleDescriptions; /**< \brief
+        O conjunto de descritores de receptáculos. */
+
+    /**
+     * \brief Identificador do componente.
+     *
+     * O ComponentId é responsável por identificar o componente. Nesta
+     * estrutura encontra-se o nome identificador do componente juntamente
+     * com o número da versão - divida em major, minor e patch.
+     */
+    struct ComponentId {
+      string name; /**< \brief O nome identificador do componente. */
+      octet major_version; /**< \brief O número principal da versão. */
+      octet minor_version; /**< \brief O número secundário da versão. */
+      octet patch_version; /**< \brief O número de revisão da versão. */
+    };
+    typedef sequence<ComponentId> ComponentIdSeq; /**< \brief Conjunto de 
+        identificadores de componentes. */
+
+    /**
+      * \brief Representa a interface do componente.
+      *
+      * Define operações para ativação e desativação de um 
+      * componente, bem como operações para requisição de uma faceta.
+      */
+    interface IComponent {
+      /**
+       * \brief Ativa o componente.
+       * 
+       * \exception StartupFailed Caso ocorra uma falha na ativação.
+       */
+      void startup() raises (StartupFailed);
+      /**
+       * \brief Desativa o componente.
+       * 
+       * \exception ShutdownFailed Caso ocorra uma falha na desativação.
+       */
+      void shutdown() raises (ShutdownFailed);
+      /**
+       * \brief Obtém a faceta do componente através do nome da interface.
+       *
+       * \param[in] facet_interface Nome da interface utilizada pela faceta
+       * que se deseja obter.
+       *
+       * \retrun Referência para a faceta do componente.
+       */
+      Object getFacet (in string facet_interface);
+      /**
+       * \brief Obtém a faceta do componente através do nome da faceta.
+       *
+       * \param[in] facet Nome da faceta que se deseja obter.
+       *
+       * \retrun Referência para a faceta do componente.
+       */
+      Object getFacetByName (in string facet);
+      /**
+       * \brief Obtém o identificador do componente.
+       *
+       * \return O identificador do componente.
+       */
+      ComponentId getComponentId ();
+    };
+    typedef sequence<IComponent> IComponentSeq; /**< O conjunto de interfaces
+        de componentes. */
+
+    /**
+      * \brief Representa a interface de receptáculos.
+      *
+      * Define operações para gerenciar conexões de receptáculos.
+      */
+    interface IReceptacles {
+      /**
+       * \brief Conecta uma faceta a um receptáculo.
+       *
+       * \param[in] receptacle O nome do receptáculo que se deseja conectar.
+       * \param[in] obj A referência para a faceta que se deseja conectar.
+       *
+       * \exception InvalidName Caso o nome do receptáculo não exista.
+       * \exception InvalidConnection Caso a conexão não possa ser estabelecida,
+       * este erro pode acontecer caso o \i obj não implemente a interface do 
+       * receptáculo.
+       * \exception AlreadyConnected Caso a faceta já esteja conectada.
+       * \exception ExceededConnectionLimit Caso o número de conexões tenha
+       * excedido o limite configurado.
+       *
+       * \return A identificação da conexão criada.
+       */
+      ConnectionId connect (in string receptacle, in Object obj)
+         raises (InvalidName, InvalidConnection, AlreadyConnected,
+                 ExceededConnectionLimit);
+      /**
+       * \brief Disconecta uma faceta. 
+       *
+       * \param[in] id A indentificação da conexão.
+       *
+       * \exception InvalidConnection Caso a conexão não seja estabelecida.
+       * \exception NoConnection Caso a conexão não exista.
+       */
+      void disconnect (in ConnectionId id)
+         raises (InvalidConnection, NoConnection);
+      /**
+       * \brief Obtém as conexões existentes no receptáculo.
+       *
+       * \param[in] receptacle O nome do receptáculo.
+       *
+       * \exception InvalidName Caso um nome seja inválido.
+       *
+       * \return O conjunto de descritores de conexão.
+       */
+      ConnectionDescriptions getConnections (in string receptacle)
+         raises (InvalidName);
+    };
+
+    /**
+      * \brief Representa a interface de introspecção.
+      *
+      * Define operações básicas para introspecção de facetas e receptáculos do
+      * componente.
+      */
+    interface IMetaInterface {
+      /**
+       * \brief Obtém todas as facetas do componente
+       *
+       * \return O conjunto de descritores de facetas.
+       */
+      FacetDescriptions getFacets();
+      /**
+       * \brief Obtém um conjunto de facetas através de um conjunto de nomes de
+       * facetas.
+       *
+       * \param[in] names Conjunto de nomes de facetas.
+       *
+       * \exception InvalidName Caso um nome seja inválido.
+       *
+       * \return O conjunto de descritores de facetas.
+       */
+      FacetDescriptions getFacetsByName(in NameList names)
+         raises (InvalidName);
+      /**
+       * \brief Obtém todos os receptáculos do componente.
+       *
+       * \return O conjunto de descritores de receptáculos.
+       */
+      ReceptacleDescriptions getReceptacles();
+      /**
+       * \brief Obtém um conjunto de receptáculos através de um conjunto de
+       * nomes de receptáculos.
+       *
+       * \exception InvalidName Caso um nome seja inválido.
+       *
+       * \return O conjunto de descritores de receptáculos.
+       */
+      ReceptacleDescriptions getReceptaclesByName(in NameList names)
+         raises (InvalidName);
+    };
+  };
+};
+
+#endif

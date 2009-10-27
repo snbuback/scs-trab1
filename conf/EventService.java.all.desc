@@ -1,0 +1,25 @@
+template_id = {
+	name = "EventService",
+	major_version = 1,
+	minor_version = 0,
+	patch_version = 0,
+}
+facets = {
+	[1] = {
+		name       = "IComponent",
+		class_name = "scs.core.servant.IComponentServant",
+	},
+	[2] = {
+		name       = "Factory",
+		class_name = "event_service.servant.EventFactoryServant",
+	},
+	[3] = {
+		name       = "Collection",
+		class_name = "event_service.servant.EventCollectionServant",
+	},
+}
+receptacles = {
+}
+entry_point = "event_service.servant.EventServiceFactory"
+lang = "java"
+plat = "all"
