@@ -1,6 +1,6 @@
-package com.pucrj.scs.trab3.event;
+package event_service;
 
-import com.pucrj.scs.trab3.event.Event;
+import event_service.Event;
 
 public interface EventSink {
  

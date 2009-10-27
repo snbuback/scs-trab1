@@ -1,4 +1,4 @@
-package com.pucrj.scs.trab3.event;
+package event_service;
 
 import scs.core.IComponent;
 

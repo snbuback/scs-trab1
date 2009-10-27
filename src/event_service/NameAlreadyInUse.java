@@ -1,4 +1,4 @@
-package com.pucrj.scs.trab3.event;
+package event_service;
 
 public class NameAlreadyInUse extends org.omg.CORBA.UserException {
  
