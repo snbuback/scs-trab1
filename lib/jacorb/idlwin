@@ -1,0 +1,5 @@
+#!/bin/sh
+export JACORB_LIBS=../../libs/jacorb
+echo $JACORB_LIBS
+java  -classpath $JACORB_LIBS/idl.jar\;$JACORB_LIBS/avalon-framework-4.1.5.jar\;$JACORB_LIBS/logkit-1.2.jar\;$JACORB_LIBS/antlr-2.7.2.jar\;$JACORB_LIBS/backport-util-concurrent.jar  org.jacorb.idl.parser  "$@"
+

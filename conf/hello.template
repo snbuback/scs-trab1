@@ -1,0 +1,23 @@
+id = {
+	name = "Hello",
+	major_version = 1,
+	minor_version = 0,
+	patch_version = 0,
+}
+facets = {
+	[1] = {
+		name           = "IComponent",
+		interface_name = "IDL:scs/core/IComponent:1.0",
+	},
+	[2] = {
+		name           = "Hello",
+		interface_name = "IDL:scs/demos/helloworld/Hello:1.0",
+	},
+}
+receptacles = {
+	[1] = {
+		name           = "OtherHello",
+		interface_name = "IDL:scs/demos/helloworld/Hello:1.0",
+		is_multiplex   = false,
+	},
+}

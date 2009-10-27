@@ -1,0 +1,25 @@
+template_id = {
+	name = "Hello",
+	major_version = 1,
+	minor_version = 0,
+	patch_version = 0,
+}
+facets = {
+	[1] = {
+		name       = "IComponent",
+		class_name = "scs.core.servant.IComponentServant",
+	},
+	[2] = {
+		name       = "EventChannel",
+		class_name = "scs.demos.helloworld.servant.HelloServant",
+	},
+}
+receptacles = {
+	[1] = {
+		name       = "OtherHello",
+		class_name = "ListReceptacle"
+	},
+}
+entry_point = "scs.demos.helloworld.servant.HelloFactory"
+lang = "java"
+plat = "all"
