@@ -29,7 +29,7 @@ public class BasicClientApp {
       String ior = in.readLine();
 
       IComponent iComponentFacet =
-        IComponentHelper.narrow(orb.string_to_object(ior)._get_component());
+        IComponentHelper.narrow(orb.string_to_object(ior));
       iComponentFacet.startup();
 
       Hello helloFacet =
