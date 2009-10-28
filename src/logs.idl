@@ -10,6 +10,8 @@ module util {
 module log_monitor {
    
    interface MonitorConfiguration {
+        long long getInterval();
+        void setInterval(in long long interval);
 	void addFile(in string file);
 	util::StringSeq getMonitoringFiles();
 	string getHost();
