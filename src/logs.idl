@@ -19,7 +19,7 @@ module log_monitor {
 	string fileName;
 	string host;
 	string ip;
-	long date;
+	long long date;
    };
 
    typedef sequence<log_monitor::FileModificationEvent> FileModificationEventSeq;
