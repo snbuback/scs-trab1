@@ -2,9 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package log_monitor.servant;
 
+import event_service.EventSinkHelper;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -12,10 +12,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import log_monitor.FileModificationEvent;
 import log_monitor.MonitorConfigurationPOA;
+import org.omg.CORBA.Any;
+import org.omg.CORBA.ORB;
+import scs.core.ConnectionDescription;
+import scs.core.servant.ComponentContext;
 
 /**
  *
@@ -23,17 +25,16 @@ import log_monitor.MonitorConfigurationPOA;
  */
 public class MonitorConfigurationServant extends MonitorConfigurationPOA {
 
+    private final ComponentContext context;
     private final Thread threadMonitor;
-    
     private final List<FileMonitoring> filesToMonitoring = new ArrayList<FileMonitoring>();
-    
     private final String host;
-    
     private final String ip;
-
     private long interval = 10000; // intervalo inicial de 10s
 
-    private MonitorConfigurationServant() throws UnknownHostException {
+    private MonitorConfigurationServant(ComponentContext context) throws UnknownHostException {
+        this.context = context;
+
         InetAddress inetAddress = InetAddress.getLocalHost();
         this.host = inetAddress.getHostName();
         this.ip = inetAddress.getHostAddress();
@@ -65,7 +66,7 @@ public class MonitorConfigurationServant extends MonitorConfigurationPOA {
     @Override
     public String[] getMonitoringFiles() {
         String[] lista = new String[filesToMonitoring.size()];
-        for (int i=0; i<lista.length; i++) {
+        for (int i = 0; i < lista.length; i++) {
             lista[i] = filesToMonitoring.get(i).getFile().getAbsolutePath();
         }
         System.out.println("Retornado " + lista.length + " arquivos: " + Arrays.toString(lista));
@@ -88,7 +89,17 @@ public class MonitorConfigurationServant extends MonitorConfigurationPOA {
 
     void generateFileModificationEvent(FileMonitoring fileMonitoring) {
         FileModificationEvent fme = new FileModificationEvent(fileMonitoring.getFile().getAbsolutePath(), getHost(), this.ip, System.currentTimeMillis());
-        // FIXME: Disparar o evento
+
+        ConnectionDescription connections[] = this.context.getReceptacleDescs().get("ds").connections;
+        for (ConnectionDescription connection : connections) {
+            // Cria um objeto Any para colocar o FileModificationEvent
+            Any fmeAny = ORB.init().create_any();
+            fmeAny.insert_Value(fme);
+
+            // dispara o evento
+            System.out.println("Disparando evento para " + connection.toString());
+            EventSinkHelper.narrow(connection.objref).push(fmeAny);
+        }
 
         // atualiza hora do arquivo para não disparar novamente o evento
         fileMonitoring.updateLastModification();
@@ -103,6 +114,4 @@ public class MonitorConfigurationServant extends MonitorConfigurationPOA {
     public void setInterval(long interval) {
         this.interval = interval;
     }
-
-
 }
