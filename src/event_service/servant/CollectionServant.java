@@ -1,43 +1,45 @@
-    /*
+/*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
 
 package event_service.servant;
 
-import event_service.EventSinkPOA;
-import org.omg.CORBA.Any;
+import event_service.ChannelCollectionPOA;
+import event_service.ChannelDescr;
+import scs.core.IComponent;
 import scs.core.servant.ComponentContext;
 
 /**
- * Faceta Sink
- * Implementa un Canal de Eventos
- * Usada pelos publicadores de eventos quando quiserem enviar notificações atraves do canal.
  *
- * @author snbuback
+ * @author edward
  */
-public class EventSinkServant extends EventSinkPOA {
+public class CollectionServant extends ChannelCollectionPOA{
 
     private final ComponentContext context;
-    
-    public EventSinkServant(ComponentContext context) {
+
+    public CollectionServant(ComponentContext context) {
         super();
         this.context = context;
     }
 
+
     /**
      * 
-     * @param ev
+     * @param nome do canal "name"
+     * @return 
      */
     @Override
-    public void push(Any ev) {
-        //TODO
-
+    public IComponent getChannel(String name) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * 
+     * @return descrição de eventos
+     */
     @Override
-    public void disconnect() {
+    public ChannelDescr[] getAll() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
