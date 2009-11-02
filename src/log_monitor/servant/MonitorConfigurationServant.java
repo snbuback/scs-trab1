@@ -90,7 +90,7 @@ public class MonitorConfigurationServant extends MonitorConfigurationPOA {
     void generateFileModificationEvent(FileMonitoring fileMonitoring) {
         FileModificationEvent fme = new FileModificationEvent(fileMonitoring.getFile().getAbsolutePath(), getHost(), this.ip, System.currentTimeMillis());
 
-        ConnectionDescription connections[] = this.context.getReceptacleDescs().get("ds").connections;
+        ConnectionDescription connections[] = this.context.getReceptacleDescs().get("Source").connections;
         for (ConnectionDescription connection : connections) {
             // Cria um objeto Any para colocar o FileModificationEvent
             Any fmeAny = ORB.init().create_any();
