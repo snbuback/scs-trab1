@@ -1,16 +1,13 @@
 package event_service.servant;
 
-import scs.demos.helloworld.servant.*;
 import java.io.File;
 
-import scs.container.ComponentLoaderOperations;
 import scs.container.LoadFailure;
 import scs.core.IComponent;
 import scs.core.IComponentHelper;
 import scs.core.servant.ComponentBuilder;
 import scs.core.servant.ComponentContext;
 import scs.core.servant.ComponentFactory;
-import scs.demos.helloworld.Hello;
 
 public class EventChannelFactory implements ComponentFactory {
 
