@@ -88,6 +88,8 @@ public class MonitorConfigurationServant extends MonitorConfigurationPOA {
     }
 
     void generateFileModificationEvent(FileMonitoring fileMonitoring) {
+        //obter as conexones que ten
+
         FileModificationEvent fme = new FileModificationEvent(fileMonitoring.getFile().getAbsolutePath(), getHost(), this.ip, System.currentTimeMillis());
 
         ConnectionDescription connections[] = this.context.getReceptacleDescs().get("Source").connections;

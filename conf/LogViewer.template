@@ -10,10 +10,6 @@ facets = {
 		interface_name = "IDL:scs/core/IComponent:1.0",
 	},
 	[2] = {
-		name           = "MonitorConfiguration",
-		interface_name = "IDL:log_v/MonitorConfiguration:1.0",
-	},
-	[2] = {
 		name       = "EventReceiver",
 		interface_name = "IDL:log_viewer/EventSink:1.0",
 	},

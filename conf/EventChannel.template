@@ -11,13 +11,13 @@ facets = {
 	},
 	[2] = {
 		name           = "Sink",
-		interface_name = "IDL:scs/demos/helloworld/Hello:1.0",
+		interface_name = "IDL:event_service/EventSink:1.0",
 	},
 }
 receptacles = {
 	[1] = {
 		name           = "Source",
 		interface_name = "IDL:event_service/EventSink:1.0",
-		is_multiplex   = false,
+		is_multiplex   = true,
 	},
 }
