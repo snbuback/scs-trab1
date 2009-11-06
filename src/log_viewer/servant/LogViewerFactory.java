@@ -4,7 +4,6 @@
  */
 package log_viewer.servant;
 
-import log_monitor.servant.*;
 import java.io.File;
 import scs.container.LoadFailure;
 import scs.core.IComponent;

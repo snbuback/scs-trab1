@@ -15,7 +15,6 @@ import java.util.List;
 import log_monitor.FileModificationEvent;
 import log_monitor.MonitorConfigurationPOA;
 import org.omg.CORBA.Any;
-import org.omg.CORBA.ORB;
 import scs.core.ConnectionDescription;
 import scs.core.servant.ComponentContext;
 
@@ -95,7 +94,7 @@ public class MonitorConfigurationServant extends MonitorConfigurationPOA {
         ConnectionDescription connections[] = this.context.getReceptacleDescs().get("Source").connections;
         for (ConnectionDescription connection : connections) {
             // Cria um objeto Any para colocar o FileModificationEvent
-            Any fmeAny = ORB.init().create_any();
+            Any fmeAny = this.context.getBuilder().getORB().create_any();
             fmeAny.insert_Value(fme);
 
             // dispara o evento

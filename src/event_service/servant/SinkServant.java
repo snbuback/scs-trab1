@@ -55,6 +55,14 @@ public class SinkServant extends EventSinkPOA {
     @Override
     public void disconnect() {
         System.out.println("Apagando o canal de eventos " + this.name);
+
+        ConnectionDescription cds[] = this.context.getReceptacleDescs().get(EventChannelFactory.RECEPT_SOURCE).connections;
+        for (ConnectionDescription cd: cds) {
+            System.out.println("\tFazendo disconect em " + cd.id);
+            ((EventSink) cd.objref).disconnect();
+        }
+
+
         CollectionServant collectionServant = (CollectionServant) this.context.getFacetDescs().get(EventServiceFactory.FACET_COLLECTION).facet_ref;
         try {
             collectionServant.removeChannel(getName());
