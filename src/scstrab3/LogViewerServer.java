@@ -70,17 +70,6 @@ public class LogViewerServer {
         IReceptacles irEventChannel = IReceptaclesHelper.narrow(icEventChannel.getFacetByName("IReceptacles"));
         irEventChannel.connect("Source", sinkLogViewer);
 
-        // Pluga o LogMonitor no EventChannel
-        List<String> iors = listaIORs(args);
-        for (String ior : iors) {
-            System.out.println("Conectando " + ior);
-            IComponent icLogMonitor = IComponentHelper.narrow(orb.string_to_object(ior));
-            icLogMonitor.startup();
-
-            IReceptacles irLogMonitor = IReceptaclesHelper.narrow(icLogMonitor.getFacetByName("IReceptacles"));
-            irLogMonitor.connect("Source", sinkEventChannel);
-        }
-
         // Inicia o orb em outra thread
         new Thread(new Runnable() {
             @Override
@@ -102,6 +91,7 @@ public class LogViewerServer {
             System.out.println("\tr : resume");
             System.out.println("\tl : lista modificações");
             System.out.println("\tc : limpar lista de modificações");
+            System.out.println("\tm : adicionar nova maquina na monitoracao");
 
             char l = sc.next().charAt(0);
             switch (l) {
@@ -122,13 +112,23 @@ public class LogViewerServer {
                 case 'c':
                     monitoring.clear();
                     break;
+                case 'm':
+                    // Pluga o LogMonitor no EventChannel
+                    System.out.print("Informe o IOR da maquina: ");
+                    String ior = sc.next();
+                    System.out.println("Conectando " + ior);
+                    IComponent icLogMonitor = IComponentHelper.narrow(orb.string_to_object(ior));
+                    icLogMonitor.startup();
+
+                    IReceptacles irLogMonitor = IReceptaclesHelper.narrow(icLogMonitor.getFacetByName("IReceptacles"));
+                    irLogMonitor.connect("Source", sinkEventChannel);
             }
         } while (true);
 
     }
 
-    private static List<String> listaIORs(String args[]) throws IOException {
-        return Arrays.asList(args);
+//    private static List<String> listaIORs(String args[]) throws IOException {
+//        return Arrays.asList(args);
 
 //        BufferedReader in = new BufferedReader(new FileReader("/tmp/servers.ior"));
 //        List<String> iors = new ArrayList<String>();
@@ -140,5 +140,5 @@ public class LogViewerServer {
 //            iors.add(ior);
 //        } while (true);
 //        return iors;
-    }
+//    }
 }
