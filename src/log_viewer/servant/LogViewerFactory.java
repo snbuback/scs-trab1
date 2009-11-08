@@ -21,12 +21,12 @@ public class LogViewerFactory {
     public static final String FACET_ICOMPONENT = IComponent.class.getSimpleName();
     public static final String FACET_VIEWADMINISTRATION = "ViewAdministration";
     public static final String FACET_MONITORING = "Monitoring";
-    public static final String FACET_EVENT_SINK = "EventReceiver";
+    public static final String FACET_EVENT_RECEIVER = "EventReceiver";
 
     public IComponent create(ComponentBuilder builder, String[] args) throws LoadFailure {
         try {
-            String templateFilename = new String("conf" + File.separator + "LogMonitor.template");
-            String descriptionFilename = new String("conf" + File.separator + "LogMonitor.java.all.desc");
+            String templateFilename = new String("conf" + File.separator + "LogViewer.template");
+            String descriptionFilename = new String("conf" + File.separator + "LogViewer.java.all.desc");
             ComponentContext context = builder.newComponent(templateFilename, descriptionFilename);
             //NotifyServant notifier = (NotifyServant)context.getFacets().get(FACET_NOTIFY);
             return IComponentHelper.narrow(context.getFacetDescs().get(FACET_ICOMPONENT).facet_ref);

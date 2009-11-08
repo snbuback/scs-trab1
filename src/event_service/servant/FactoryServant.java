@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import scs.core.IComponent;
+import scs.core.IComponentHelper;
 import scs.core.servant.ComponentContext;
 
 /**
@@ -46,9 +47,9 @@ public class FactoryServant extends ChannelFactoryPOA {
             String templateFilename = new String("conf" + File.separator + "EventChannel.template");
             String descriptionFilename = new String("conf" + File.separator + "EventChannel.java.all.desc");
             ComponentContext comp = this.context.getBuilder().newComponent(templateFilename, descriptionFilename);
-            cs.registerNewChannel(name, (IComponent) comp.getIComponent());
+            cs.registerNewChannel(name, IComponentHelper.narrow(comp.getIComponent()));
             ((SinkServant) comp.getFacets().get(EventChannelFactory.FACET_SINK)).setName(name);
-            return (IComponent) comp.getIComponent();
+            return IComponentHelper.narrow(comp.getIComponent());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -7,6 +7,7 @@ package log_viewer.servant;
 
 import event_service.EventSinkPOA;
 import log_monitor.FileModificationEvent;
+import log_monitor.FileModificationEventHelper;
 import org.omg.CORBA.Any;
 import scs.core.servant.ComponentContext;
 
@@ -24,7 +25,7 @@ public class EventReceiverServant extends EventSinkPOA {
 
     @Override
     public void push(Any ev) {
-        FileModificationEvent fme = (FileModificationEvent) ev.extract_Value();
+        FileModificationEvent fme = FileModificationEventHelper.extract(ev);
         // Joga a mensagem para o monitoringServant
         MonitoringServant notifier = (MonitoringServant)context.getFacets().get(LogViewerFactory.FACET_MONITORING);
         notifier.notifyModification(fme);

@@ -30,6 +30,7 @@ public class EventServiceFactory {
             //context.getFacetDescs().get(FACET_FACTORY).facet_ref;
             return IComponentHelper.narrow(context.getFacetDescs().get(FACET_ICOMPONENT).facet_ref);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new LoadFailure(e.getLocalizedMessage());
         }
 

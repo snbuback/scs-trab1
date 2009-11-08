@@ -24,11 +24,12 @@ public class LogMonitorFactory {
 
     public IComponent create(ComponentBuilder builder, String[] args) throws LoadFailure {
         try {
-            String templateFilename = new String("conf" + File.separator + "LogViewer.template");
-            String descriptionFilename = new String("conf" + File.separator + "LogViewer.java.all.desc");
+            String templateFilename = new String("conf" + File.separator + "LogMonitor.template");
+            String descriptionFilename = new String("conf" + File.separator + "LogMonitor.java.all.desc");
             ComponentContext context = builder.newComponent(templateFilename, descriptionFilename);
             return IComponentHelper.narrow(context.getFacetDescs().get(FACET_ICOMPONENT).facet_ref);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new LoadFailure(e.getLocalizedMessage());
         }
 

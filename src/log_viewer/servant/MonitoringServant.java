@@ -26,6 +26,7 @@ public class MonitoringServant extends MonitoringPOA {
     }
 
     public void notifyModification(FileModificationEvent fme) {
+        System.out.println("Arquivo modificado: " + fme.fileName + " " + fme.host + " " + fme.ip + " " + fme.date);
         this.modifications.add(fme);
     }
 

@@ -10,6 +10,10 @@ facets = {
 		interface_name = "IDL:scs/core/IComponent:1.0",
 	},
 	[2] = {
+		name           = "IReceptacles",
+		interface_name = "IDL:scs/core/IReceptacles:1.0",
+	},
+	[3] = {
 		name           = "MonitorConfiguration",
 		interface_name = "IDL:log_monitor/MonitorConfiguration:1.0",
 	},

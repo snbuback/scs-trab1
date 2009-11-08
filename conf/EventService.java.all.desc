@@ -10,12 +10,16 @@ facets = {
 		class_name = "scs.core.servant.IComponentServant",
 	},
 	[2] = {
-		name       = "Factory",
-		class_name = "event_service.servant.EventFactoryServant",
+		name       = "IReceptacles",
+		class_name = "scs.core.servant.IReceptaclesServant",
 	},
 	[3] = {
+		name       = "Factory",
+		class_name = "event_service.servant.FactoryServant",
+	},
+	[4] = {
 		name       = "Collection",
-		class_name = "event_service.servant.EventCollectionServant",
+		class_name = "event_service.servant.CollectionServant",
 	},
 }
 receptacles = {

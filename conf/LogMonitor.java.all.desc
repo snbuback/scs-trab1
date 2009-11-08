@@ -10,8 +10,16 @@ facets = {
 		class_name = "scs.core.servant.IComponentServant",
 	},
 	[2] = {
+		name       = "IReceptacles",
+		class_name = "scs.core.servant.IReceptaclesServant",
+	},
+	[3] = {
 		name       = "MonitorConfiguration",
 		class_name = "log_monitor.servant.MonitorConfigurationServant",
+	},
+	[4] = {
+		name       = "IReceptacles",
+		class_name = "scs.core.servant.IReceptaclesServant",
 	},
 }
 receptacles = {

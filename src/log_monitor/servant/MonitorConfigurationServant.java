@@ -13,8 +13,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import log_monitor.FileModificationEvent;
+import log_monitor.FileModificationEventHelper;
 import log_monitor.MonitorConfigurationPOA;
+import org.jacorb.ir.TypeCodeUtil;
 import org.omg.CORBA.Any;
+import org.omg.DynamicAny.DynAny;
+import org.omg.DynamicAny.DynAnyFactory;
+import org.omg.DynamicAny.DynAnyFactoryHelper;
 import scs.core.ConnectionDescription;
 import scs.core.servant.ComponentContext;
 
@@ -29,9 +34,9 @@ public class MonitorConfigurationServant extends MonitorConfigurationPOA {
     private final List<FileMonitoring> filesToMonitoring = new ArrayList<FileMonitoring>();
     private final String host;
     private final String ip;
-    private long interval = 10000; // intervalo inicial de 10s
+    private long interval = 1000; // intervalo inicial de 10s
 
-    private MonitorConfigurationServant(ComponentContext context) throws UnknownHostException {
+    public MonitorConfigurationServant(ComponentContext context) throws UnknownHostException {
         this.context = context;
 
         InetAddress inetAddress = InetAddress.getLocalHost();
@@ -45,8 +50,10 @@ public class MonitorConfigurationServant extends MonitorConfigurationPOA {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(MonitorConfigurationServant.this.getInterval());
-                    MonitorConfigurationServant.this.verifyModifications();
+                    while (true) {
+                        Thread.sleep(MonitorConfigurationServant.this.getInterval());
+                        MonitorConfigurationServant.this.verifyModifications();
+                    }
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
@@ -78,10 +85,13 @@ public class MonitorConfigurationServant extends MonitorConfigurationPOA {
     }
 
     void verifyModifications() {
-        System.out.println("Verificando modificações de arquivos em " + new Date());
+        //System.out.println("Verificando modificações de arquivos em " + new Date());
         for (FileMonitoring fileMonitoring : this.filesToMonitoring) {
             if (fileMonitoring.isModified()) {
                 generateFileModificationEvent(fileMonitoring);
+
+                // atualiza hora do arquivo para não disparar novamente o evento
+                fileMonitoring.updateLastModification();
             }
         }
     }
@@ -92,18 +102,24 @@ public class MonitorConfigurationServant extends MonitorConfigurationPOA {
         FileModificationEvent fme = new FileModificationEvent(fileMonitoring.getFile().getAbsolutePath(), getHost(), this.ip, System.currentTimeMillis());
 
         ConnectionDescription connections[] = this.context.getReceptacleDescs().get("Source").connections;
-        for (ConnectionDescription connection : connections) {
-            // Cria um objeto Any para colocar o FileModificationEvent
-            Any fmeAny = this.context.getBuilder().getORB().create_any();
-            fmeAny.insert_Value(fme);
-
-            // dispara o evento
-            System.out.println("Disparando evento para " + connection.toString());
-            EventSinkHelper.narrow(connection.objref).push(fmeAny);
+        if (connections == null) {
+            System.err.println("Nenhum logviewer ativo para receber notificação de alteração do arquivo: " + fileMonitoring.getFile().getAbsolutePath());
+            return;
         }
 
-        // atualiza hora do arquivo para não disparar novamente o evento
-        fileMonitoring.updateLastModification();
+        for (ConnectionDescription connection : connections) {
+            try {
+                // Cria um objeto Any para colocar o FileModificationEvent
+                Any fmeAny = this.context.getBuilder().getORB().create_any();
+                FileModificationEventHelper.insert(fmeAny, fme);
+
+                // dispara o evento
+                System.out.println("Disparando evento para " + connection.toString());
+                EventSinkHelper.narrow(connection.objref).push(fmeAny);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
