@@ -6,6 +6,7 @@
 package event_service.servant;
 
 import event_service.EventSink;
+import event_service.EventSinkHelper;
 import event_service.EventSinkPOA;
 import event_service.InvalidName;
 import org.omg.CORBA.Any;
@@ -59,16 +60,7 @@ public class SinkServant extends EventSinkPOA {
         ConnectionDescription cds[] = this.context.getReceptacleDescs().get(EventChannelFactory.RECEPT_SOURCE).connections;
         for (ConnectionDescription cd: cds) {
             System.out.println("\tFazendo disconect em " + cd.id);
-            ((EventSink) cd.objref).disconnect();
-        }
-
-
-        CollectionServant collectionServant = (CollectionServant) this.context.getFacetDescs().get(EventServiceFactory.FACET_COLLECTION).facet_ref;
-        try {
-            collectionServant.removeChannel(getName());
-        } catch (InvalidName e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            EventSinkHelper.narrow(cd.objref).disconnect();
         }
     }
 

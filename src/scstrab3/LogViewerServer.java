@@ -14,7 +14,15 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
+import log_monitor.FileModificationEvent;
+import log_viewer.Monitoring;
+import log_viewer.MonitoringHelper;
+import log_viewer.ViewAdministrationMonitoring;
+import log_viewer.ViewAdministrationMonitoringHelper;
 import log_viewer.servant.LogViewerFactory;
 import org.omg.CORBA.ORB;
 import org.omg.PortableServer.POA;
@@ -35,7 +43,7 @@ public class LogViewerServer {
 
     public static void main(String[] args) throws Exception {
         // ORB initialization
-        ORB orb = ORB.init(args, null);
+        final ORB orb = ORB.init(args, null);
 
         POA poa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
         poa.the_POAManager().activate();
@@ -63,7 +71,7 @@ public class LogViewerServer {
         irEventChannel.connect("Source", sinkLogViewer);
 
         // Pluga o LogMonitor no EventChannel
-        List<String> iors = listaIORs();
+        List<String> iors = listaIORs(args);
         for (String ior : iors) {
             System.out.println("Conectando " + ior);
             IComponent icLogMonitor = IComponentHelper.narrow(orb.string_to_object(ior));
@@ -73,20 +81,64 @@ public class LogViewerServer {
             irLogMonitor.connect("Source", sinkEventChannel);
         }
 
-        // Waiting for the remote requests
-        orb.run();
+        // Inicia o orb em outra thread
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // Waiting for the remote requests
+                orb.run();
+            }
+        }).start();
+
+        // Obtem as facets Monitoring e ViewConfiguration do LogViewer
+        Monitoring monitoring = MonitoringHelper.narrow(icLogViewer.getFacetByName(LogViewerFactory.FACET_MONITORING));
+        ViewAdministrationMonitoring va = ViewAdministrationMonitoringHelper.narrow(icLogViewer.getFacetByName(LogViewerFactory.FACET_VIEWADMINISTRATION));
+
+        Scanner sc = new Scanner(System.in);
+        t: do {
+            System.out.println("*************************************************************************************" );
+            System.out.println("Digite uma letra abaixo e ENTER para: " + (va.isPaused() ? "(PAUSED!)" : "") + "\n" );
+            System.out.println("\tp : pausar");
+            System.out.println("\tr : resume");
+            System.out.println("\tl : lista modificações");
+            System.out.println("\tc : limpar lista de modificações");
+
+            char l = sc.next().charAt(0);
+            switch (l) {
+                case 'p':
+                    va.pause();
+                    break;
+                case 'r':
+                    va.resume();
+                    break;
+                case 'l':
+                    for (FileModificationEvent fme: monitoring.getModifications()) {
+                        System.out.println(fme.fileName);
+                        System.out.println("Data: " + new Date(fme.date));
+                        System.out.println("Host: " + fme.host + " / " + fme.ip);
+                        System.out.println();
+                    }
+                    break;
+                case 'c':
+                    monitoring.clear();
+                    break;
+            }
+        } while (true);
+
     }
 
-    private static List<String> listaIORs() throws IOException {
-        BufferedReader in = new BufferedReader(new FileReader("/tmp/servers.ior"));
-        List<String> iors = new ArrayList<String>();
-        do {
-            String ior = in.readLine();
-            if (ior == null) {
-                break;
-            }
-            iors.add(ior);
-        } while (true);
-        return iors;
+    private static List<String> listaIORs(String args[]) throws IOException {
+        return Arrays.asList(args);
+
+//        BufferedReader in = new BufferedReader(new FileReader("/tmp/servers.ior"));
+//        List<String> iors = new ArrayList<String>();
+//        do {
+//            String ior = in.readLine();
+//            if (ior == null) {
+//                break;
+//            }
+//            iors.add(ior);
+//        } while (true);
+//        return iors;
     }
 }

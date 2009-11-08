@@ -5,6 +5,8 @@
 package event_service.servant;
 
 import event_service.ChannelFactoryPOA;
+import event_service.EventSink;
+import event_service.EventSinkHelper;
 import event_service.InvalidName;
 import event_service.NameAlreadyInUse;
 import java.io.File;
@@ -68,7 +70,8 @@ public class FactoryServant extends ChannelFactoryPOA {
             throw new InvalidName(name);
         }
 
-        ((SinkServant)channel.getFacet(EventChannelFactory.FACET_SINK)).disconnect();
+        EventSink sink = EventSinkHelper.narrow(channel.getFacet(EventChannelFactory.FACET_SINK));
+        sink.disconnect();
         
     }
 }

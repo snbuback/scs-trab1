@@ -25,6 +25,11 @@ public class EventReceiverServant extends EventSinkPOA {
 
     @Override
     public void push(Any ev) {
+        ViewAdministrationServant va = (ViewAdministrationServant)context.getFacets().get(LogViewerFactory.FACET_VIEWADMINISTRATION);
+        if (va.isPaused()) {
+            // evento ignora pois monitoramento está desativado
+            return;
+        }
         FileModificationEvent fme = FileModificationEventHelper.extract(ev);
         // Joga a mensagem para o monitoringServant
         MonitoringServant notifier = (MonitoringServant)context.getFacets().get(LogViewerFactory.FACET_MONITORING);
@@ -33,7 +38,7 @@ public class EventReceiverServant extends EventSinkPOA {
 
     @Override
     public void disconnect() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        System.out.println("Desconectado");
     }
 
 }

@@ -16,13 +16,24 @@ public class ViewAdministrationServant extends ViewAdministrationMonitoringPOA {
 
     private final ComponentContext context;
 
+    private boolean paused = false;
+
     public ViewAdministrationServant(ComponentContext context) {
         this.context = context;
     }
 
     @Override
-    public String[] getMonitoringFiles() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void pause() {
+        this.paused = true;
     }
 
+    @Override
+    public void resume() {
+        this.paused = false;
+    }
+
+    @Override
+    public boolean isPaused() {
+        return this.paused;
+    }
 }

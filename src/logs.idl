@@ -31,7 +31,9 @@ module log_monitor {
 module log_viewer {
 
 	interface ViewAdministrationMonitoring {
-		util::StringSeq getMonitoringFiles();
+		void pause();
+		void resume();
+		boolean isPaused();
 	};
 
 	interface Monitoring {
