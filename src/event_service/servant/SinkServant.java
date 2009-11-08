@@ -8,7 +8,6 @@ package event_service.servant;
 import event_service.EventSink;
 import event_service.EventSinkHelper;
 import event_service.EventSinkPOA;
-import event_service.InvalidName;
 import org.omg.CORBA.Any;
 import scs.core.ConnectionDescription;
 import scs.core.servant.ComponentContext;

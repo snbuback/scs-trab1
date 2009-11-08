@@ -10,8 +10,6 @@ import event_service.EventSinkHelper;
 import event_service.InvalidName;
 import event_service.NameAlreadyInUse;
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 import scs.core.IComponent;
 import scs.core.IComponentHelper;
 import scs.core.servant.ComponentContext;
@@ -72,6 +70,8 @@ public class FactoryServant extends ChannelFactoryPOA {
 
         EventSink sink = EventSinkHelper.narrow(channel.getFacet(EventChannelFactory.FACET_SINK));
         sink.disconnect();
+
+        //context.getBuilder().getPOA().deactivate_object(oid);
         
     }
 }

@@ -10,16 +10,11 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import log_monitor.FileModificationEvent;
 import log_monitor.FileModificationEventHelper;
 import log_monitor.MonitorConfigurationPOA;
-import org.jacorb.ir.TypeCodeUtil;
 import org.omg.CORBA.Any;
-import org.omg.DynamicAny.DynAny;
-import org.omg.DynamicAny.DynAnyFactory;
-import org.omg.DynamicAny.DynAnyFactoryHelper;
 import scs.core.ConnectionDescription;
 import scs.core.servant.ComponentContext;
 
